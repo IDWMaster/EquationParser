@@ -84,7 +84,7 @@ var parse = function(txt,prev) {
             }
             txt.next();
             var next = parse(txt,retval);
-            return next == undefined ? retval : next;
+            return {subexpression:next == undefined ? retval : next};
             break;
     }
     
@@ -96,6 +96,9 @@ var promptUser = function() {
         var tree = parse(StringPointer(txt));
         console.log(tree);
         var execute = function(node){
+            if(node.subexpression) {
+                return execute(node.subexpression);
+            }
             if(node.op) {
                 switch(node.op) {
                     case '+':
